@@ -1,0 +1,107 @@
+{% extends "base.html" %}{% block title %}ApexRide Nepal — Luxury Vehicle Rental in Nepal{% endblock %}
+{% block content %}
+<section class="hero">
+  <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1920&auto=format&fit=crop">
+    <source src="https://cdn.coverr.co/videos/coverr-driving-a-luxury-car-1580/1080p.mp4" type="video/mp4">
+  </video>
+  <img class="hero-img" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1920&auto=format&fit=crop" alt="Luxury car in Nepal" style="display:none" onerror="this.style.display='none'">
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <span class="hero-badge">🇳🇵 Nepal's Luxury Rental Platform · Kathmandu · Pokhara · Ghorahi</span>
+    <h1>Drive Nepal<br>in <span class="grad">Pure Luxury.</span></h1>
+    <p class="lead" style="max-width:620px;margin-top:1rem">Premium cars, bikes &amp; cycles — verified owners, transparent NPR pricing, 24/7 road assistance. Book in minutes, drive with confidence.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="{{ url_for('main.fleet') }}">🚗 Browse the Fleet</a>
+      <a class="btn btn-ghost" href="{{ url_for('vehicles.list_vehicle') }}">💰 List Your Vehicle &amp; Earn</a>
+    </div>
+    <div class="hero-stats">
+      <div><b>120+</b><span>Verified Vehicles</span></div>
+      <div><b>4.9 ★</b><span>2,400+ Happy Renters</span></div>
+      <div><b>24/7</b><span>Road Assistance</span></div>
+      <div><b>Rs. 500</b><span>Rentals from</span></div>
+    </div>
+  </div>
+</section>
+<div class="drift-track" aria-hidden="true">
+  <div class="speed-lines"></div><div class="skid"></div><div class="smoke"></div>
+  <div class="drift-car">🏎️</div>
+</div>
+
+<div class="container" style="padding-top:1.5rem">
+  <div class="nepal-strip reveal">
+    <p class="eyebrow" style="margin-bottom:.5rem">Nepal First</p>
+    <h2 style="font-size:clamp(1.5rem,4vw,2.2rem)">Built for Nepal's Roads</h2>
+    <p style="max-width:680px;margin-top:.6rem;position:relative;z-index:1">From city traffic to Himalayan highways — every ApexRide vehicle is chosen for Nepal: high ground clearance for mountain roads, honest NPR pricing, and 24/7 assistance wherever your route takes you.</p>
+    <div class="route-chips" aria-label="Popular routes">
+      <span class="route-chip">📍 Kathmandu <small>· capital &amp; valley</small></span>
+      <span class="route-chip">📍 Pokhara <small>· lakeside &amp; Annapurna gateway</small></span>
+      <span class="route-chip">📍 Ghorahi <small>· Dang valley</small></span>
+      <span class="route-chip">📍 Mustang <small>· Himalayan trails</small></span>
+    </div>
+  </div>
+</div>
+
+<section class="section container">
+  <div class="reveal"><p class="eyebrow">Choose Your Ride</p><h2>Browse by <span class="grad">Category</span></h2></div>
+  <div class="grid grid-4 mt">
+    <a class="card cat-card reveal" href="{{ url_for('main.fleet') }}?tier=luxury"><span class="ico">👑</span><h3>Luxury</h3><p>Fortuner, Land Cruiser &amp; more — from Rs. 7,000/day</p></a>
+    <a class="card cat-card reveal" href="{{ url_for('main.fleet') }}?type=car"><span class="ico">🚗</span><h3>Cars</h3><p>Standard Rs. 7,000 · Luxury Rs. 15,000/day</p></a>
+    <a class="card cat-card reveal" href="{{ url_for('main.fleet') }}?type=bike"><span class="ico">🏍️</span><h3>Bikes</h3><p>Standard Rs. 2,000 · Luxury Rs. 7,000/day</p></a>
+    <a class="card cat-card reveal" href="{{ url_for('main.fleet') }}?type=cycle"><span class="ico">🚲</span><h3>Cycles</h3><p>Standard Rs. 500 · Luxury Rs. 2,000/day</p></a>
+  </div>
+</section>
+
+<section class="section container" style="padding-top:0">
+  <div class="reveal"><p class="eyebrow">Featured Fleet</p><h2>Handpicked for <span class="gold-text">Nepal's Roads</span></h2>
+  <p>Live price calculator — change the days and see your total instantly. All prices in NPR (Rs.).</p></div>
+  <div class="grid grid-3 mt">
+  {% for v in featured %}
+    <article class="card reveal">
+      <div class="card-img"><span class="chip {{ 'lux' if v.tier=='luxury' else 'std' }} badge-top">{{ '👑 Luxury' if v.tier=='luxury' else '✓ Standard' }}</span>
+        <img src="{{ v.cover }}" alt="{{ v.display_name }}" loading="lazy"></div>
+      <div class="card-body">
+        <h3>{{ v.display_name }} <small style="color:var(--muted)">· {{ v.year }}</small></h3>
+        <div class="meta-row"><span class="chip">{{ v.category|title }}</span><span class="chip">{{ v.transmission }}</span><span class="chip">{{ v.fuel }}</span><span class="chip">📍 {{ v.location }}</span></div>
+        <p style="font-size:.92rem">{{ v.description }}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.8rem"><span class="price">Rs. {{ "{:,}".format(v.daily_price) }}<small>/day</small></span><span class="chip">Deposit Rs. {{ "{:,}".format(v.deposit) }}</span></div>
+        <div class="calc" data-calc="{{ v.daily_price }}"><label>Days <input type="number" value="3" min="1" max="30" aria-label="Rental days"></label><span class="calc-total">—</span></div>
+        <a class="btn btn-primary btn-block mt" href="{{ url_for('main.vehicle_detail', vehicle_id=v.id) }}">View &amp; Book →</a>
+      </div>
+    </article>
+  {% endfor %}
+  </div>
+  <div class="center mt"><a class="btn btn-ghost" href="{{ url_for('main.fleet') }}">View Full Fleet →</a></div>
+</section>
+
+<section class="section container" style="padding-top:0">
+  <div class="reveal center"><p class="eyebrow">Why ApexRide</p><h2>Trust, Built In</h2></div>
+  <div class="trust mt">
+    <div class="card reveal"><h3>🛡️ Security Verified</h3><p>Every renter passes Nagarikta / National ID + driving licence verification. Every owner passes Bluebook checks. Refundable security deposits protect both sides.</p></div>
+    <div class="card reveal"><h3>💳 Transparent NPR Pricing</h3><p>Fixed prices locked by policy — no surge, no hidden fees. 5% service fee + 13% VAT shown before you pay.</p></div>
+    <div class="card reveal"><h3>🛟 24/7 Road Assistance</h3><p>Breakdown anywhere in Nepal? Call +977-9845857209 — our team reaches you, day or night.</p></div>
+    <div class="card reveal"><h3>⚡ Instant Booking</h3><p>Pick dates, see the full breakdown, confirm. Your rental agreement is generated automatically.</p></div>
+  </div>
+</section>
+
+<section class="section container" style="padding-top:0">
+  <div class="two-col">
+    <div class="reveal"><p class="eyebrow">Our Founders</p><h2>Built in Nepal,<br>by <span class="grad">Nepal.</span></h2>
+      <p class="mt">ApexRide Nepal was founded by <b style="color:#fff">Mr. Bikalpa Khanal &amp; Madhu Pun</b> — two friends who believed renting a great vehicle in Nepal should be as easy and trustworthy as booking a hotel. From a single car in Ghorahi to a fleet across Kathmandu, Pokhara and beyond, they built ApexRide on one promise: verified people, honest prices, and help whenever the road gets tough.</p>
+      <a class="btn btn-gold mt" href="{{ url_for('main.about') }}">Our Story →</a></div>
+    <div class="reveal"><div class="card" style="padding:1.8rem">
+      <div class="founder"><div class="avatar">BK</div><div><h3>Bikalpa Khanal</h3><p>Co-Founder · Kathmandu, Nepal</p></div></div>
+      <div class="founder mt"><div class="avatar" style="background:linear-gradient(135deg,#d97706,#e11d48)">MP</div><div><h3>Madhu Pun</h3><p>Co-Founder · Nepal</p></div></div>
+      <p class="mt" style="font-style:italic">"We started ApexRide so every Nepali — and every guest visiting Nepal — can drive a vehicle they trust, at a price they can see."</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="section container" style="padding-top:0">
+  <div class="reveal center"><p class="eyebrow">Loved by Renters</p><h2>What Nepal Says</h2></div>
+  <div class="grid grid-3 mt">
+    <div class="card testi reveal"><div class="stars">★★★★★</div><p>"Booked a Land Cruiser for a Mustang trip. Spotless car, clear pricing, and the deposit came back the same day. Best rental experience in Nepal."</p><b>— Aarav Shrestha, Kathmandu</b></div>
+    <div class="card testi reveal"><div class="stars">★★★★★</div><p>"I list my Royal Enfield on ApexRide and earn every weekend. The 7-photo listing and walkaround video make renters trust me instantly."</p><b>— Sita Gurung, Pokhara · Owner</b></div>
+    <div class="card testi reveal"><div class="stars">★★★★★</div><p>"Rented a cycle in Pokhara for Rs. 500/day. Booking took two minutes and road assistance answered at 10pm. Highly recommended."</p><b>— Daniel K., Tourist</b></div>
+  </div>
+</section>
+{% endblock %}

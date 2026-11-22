@@ -1,0 +1,53 @@
+{% extends "base.html" %}{% block title %}Fleet — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <p class="eyebrow">Our Fleet</p><h1>Find Your <span class="grad">Perfect Ride</span></h1>
+  <p class="lead">All prices in NPR (Rs.) per day — locked by ApexRide policy. No hidden fees.</p>
+  <button class="btn btn-ghost filter-toggle" id="filterToggle">🔍 Filters &amp; Search</button>
+  <div class="fleet-layout mt">
+    <aside class="card sidebar" id="filterSidebar">
+      <h3>🔍 Search &amp; Filters</h3>
+      <form method="get" action="{{ url_for('main.fleet') }}">
+        <div class="field"><label>Search</label><input type="text" name="q" value="{{ args.get('q','') }}" placeholder="Brand, model or city…"></div>
+        <div class="field"><label>Vehicle Type</label><select name="type"><option value="">All types</option><option value="car" {{ 'selected' if args.get('type')=='car' }}>Car</option><option value="bike" {{ 'selected' if args.get('type')=='bike' }}>Bike</option><option value="cycle" {{ 'selected' if args.get('type')=='cycle' }}>Cycle</option></select></div>
+        <div class="field"><label>Tier</label><select name="tier"><option value="">All tiers</option><option value="standard" {{ 'selected' if args.get('tier')=='standard' }}>Standard</option><option value="luxury" {{ 'selected' if args.get('tier')=='luxury' }}>Luxury / High CC</option></select></div>
+        <div class="field"><label>Transmission</label><select name="transmission"><option value="">Any</option><option {{ 'selected' if args.get('transmission')=='Automatic' }}>Automatic</option><option {{ 'selected' if args.get('transmission')=='Manual' }}>Manual</option></select></div>
+        <div class="field"><label>Fuel</label><select name="fuel"><option value="">Any</option><option {{ 'selected' if args.get('fuel')=='Petrol' }}>Petrol</option><option {{ 'selected' if args.get('fuel')=='Diesel' }}>Diesel</option><option {{ 'selected' if args.get('fuel')=='Electric' }}>Electric</option><option {{ 'selected' if args.get('fuel')=='Hybrid' }}>Hybrid</option></select></div>
+        <div class="field-row"><div class="field"><label>Min Rs./day</label><input type="number" name="min_price" value="{{ args.get('min_price','') }}" placeholder="500"></div><div class="field"><label>Max Rs./day</label><input type="number" name="max_price" value="{{ args.get('max_price','') }}" placeholder="15000"></div></div>
+        <button class="btn btn-primary btn-block" type="submit">Apply Filters</button>
+        <a class="btn btn-ghost btn-block mt" href="{{ url_for('main.fleet') }}">Clear All</a>
+      </form>
+      <div class="mt" style="font-size:.88rem"><b style="color:#fff">Fixed Pricing (Rs./day)</b><br>Standard Cycle 500 · Luxury Cycle 2,000<br>Standard Bike 2,000 · Luxury Bike 7,000<br>Standard Car 7,000 · Luxury Car 15,000</div>
+    </aside>
+    <div>
+      <p><b style="color:#fff">{{ vehicles|length }} vehicle(s) found</b></p>
+      <div class="grid grid-3 mt" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">
+      {% for v in vehicles %}
+        <article class="card">
+          <div class="card-img"><span class="chip {{ 'lux' if v.tier=='luxury' else 'std' }} badge-top">{{ '👑 Luxury' if v.tier=='luxury' else '✓ Standard' }}</span><img src="{{ v.cover }}" alt="{{ v.display_name }}" loading="lazy"></div>
+          <div class="card-body">
+            <h3>{{ v.display_name }} <small style="color:var(--muted)">· {{ v.year }}</small></h3>
+            <div class="meta-row"><span class="chip">{{ v.category|title }}</span><span class="chip">{{ v.transmission }}</span><span class="chip">{{ v.fuel }}</span><span class="chip">{{ v.cc }} CC</span><span class="chip">📍 {{ v.location }}</span></div>
+            <div style="display:flex;justify-content:space-between;align-items:center"><span class="price">Rs. {{ "{:,}".format(v.daily_price) }}<small>/day</small></span><span class="chip">{{ v.seats }} seats</span></div>
+            <div style="display:flex;gap:.6rem;margin-top:1rem">
+              <button class="btn btn-ghost btn-sm" style="flex:1" data-preview data-img="{{ v.cover }}" data-title="{{ v.display_name }} ({{ v.year }})" data-meta="{{ v.category|title }} · {{ v.tier|title }} · {{ v.transmission }} · {{ v.fuel }} · {{ v.cc }} CC · {{ v.mileage_km }} km · 📍 {{ v.location }}" data-price="Rs. {{ '{:,}'.format(v.daily_price) }}/day" data-desc="{{ v.description }}" data-link="{{ url_for('main.vehicle_detail', vehicle_id=v.id) }}">👁 Quick View</button>
+              <a class="btn btn-primary btn-sm" style="flex:1" href="{{ url_for('main.vehicle_detail', vehicle_id=v.id) }}">Book →</a>
+            </div>
+          </div>
+        </article>
+      {% else %}
+        <p>No vehicles match those filters. <a href="{{ url_for('main.fleet') }}" style="color:var(--gold2)">Clear filters</a>.</p>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<div class="modal" id="previewModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <img id="pmImg" src="" alt="Vehicle preview">
+    <h3 id="pmTitle" class="mt"></h3><p id="pmMeta"></p><p id="pmDesc" class="mt"></p>
+    <p class="price mt" id="pmPrice"></p>
+    <div style="display:flex;gap:.7rem;margin-top:1rem"><a class="btn btn-primary" id="pmLink" href="#">View &amp; Book →</a><button class="btn btn-ghost" id="previewClose">Close</button></div>
+  </div>
+</div>
+{% endblock %}

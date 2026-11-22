@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% block title %}Dashboard — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <p class="eyebrow">Welcome back, {{ user.full_name }}</p><h1>Your Dashboard</h1>
+  <p>{{ user.role|title }} account · {{ user.email }} · {{ user.phone }} · Verification: <span class="status {{ user.verification_status|lower }}">{{ user.verification_status }}</span></p>
+  <div class="tabs mt">
+    <button class="tab-btn active" data-tab="bookings">📅 Bookings</button>
+    <button class="tab-btn" data-tab="vehicles">🚗 My Vehicles</button>
+    <button class="tab-btn" data-tab="verification">🛡️ Verification</button>
+    <button class="tab-btn" data-tab="earnings">💰 Earnings</button>
+    <button class="tab-btn" data-tab="agreements">📄 Rental Agreements</button>
+  </div>
+  <div class="tab-panel active" id="tab-bookings"><div class="card" style="padding:1.4rem">
+    {% if bookings %}<table class="table"><tr><th>Vehicle</th><th>Dates</th><th>Days</th><th>Total (Rs.)</th><th>Status</th></tr>
+    {% for b in bookings %}<tr><td>{{ b.vehicle.display_name }}</td><td>{{ b.start_date }} → {{ b.end_date }}</td><td>{{ b.days }}</td><td>{{ "{:,}".format(b.total) }}</td><td><span class="status {{ b.status|lower }}">{{ b.status }}</span></td></tr>{% endfor %}</table>
+    {% else %}<p>No bookings yet. <a href="{{ url_for('main.fleet') }}" style="color:var(--gold2)">Browse the fleet →</a></p>{% endif %}
+  </div></div>
+  <div class="tab-panel" id="tab-vehicles"><div class="card" style="padding:1.4rem">
+    {% if my_vehicles %}<div class="grid grid-3">{% for v in my_vehicles %}<article class="card"><div class="card-img"><img src="{{ v.cover }}" alt="{{ v.display_name }}"></div><div class="card-body"><h3>{{ v.display_name }}</h3><p>{{ v.status }} · Rs. {{ "{:,}".format(v.daily_price) }}/day · 📍 {{ v.location }}</p><a class="btn btn-ghost btn-sm mt" href="{{ url_for('main.vehicle_detail', vehicle_id=v.id) }}">View Listing</a></div></article>{% endfor %}</div>
+    {% else %}<p>You haven't listed a vehicle yet.</p>{% endif %}
+    <a class="btn btn-primary mt" href="{{ url_for('vehicles.list_vehicle') }}">+ List a Vehicle</a>
+  </div></div>
+  <div class="tab-panel" id="tab-verification"><div class="card" style="padding:1.4rem">
+    <h3>Verification Status: <span class="status {{ user.verification_status|lower }}">{{ user.verification_status }}</span></h3>
+    <p class="mt">Documents on file:</p><ul style="margin-left:1.2rem;color:var(--muted)">
+      <li>Nagarikta / Citizenship No.: {{ user.nagarikta_no or '—' }}</li>
+      <li>National ID No.: {{ user.national_id_no or '—' }}</li>
+      <li>Driving Licence No.: {{ user.licence_no or '—' }}</li>
+      <li>Selfie photo: {{ 'Uploaded ✓' if user.selfie_photo else 'Not uploaded' }}</li>
+      <li>Bluebook: {{ 'Uploaded ✓' if user.bluebook_photo else 'Not uploaded' }}</li>
+      <li>Walkaround video: {{ 'Uploaded ✓' if user.walkaround_video else 'Not uploaded' }}</li>
+    </ul><p class="mt">Our team reviews KYC documents within 24 hours. Approved accounts can book and list without limits.</p>
+  </div></div>
+  <div class="tab-panel" id="tab-earnings"><div class="card" style="padding:1.4rem">
+    <h3>Total Earnings (as Owner)</h3><p class="price" style="font-size:2rem">Rs. {{ "{:,}".format(earnings) }}</p>
+    <p>Earnings are the sum of confirmed bookings on your listed vehicles (service fee already deducted in the breakdown shown to renters). Payouts are settled weekly to your registered bank / eSewa / Khalti.</p>
+  </div></div>
+  <div class="tab-panel" id="tab-agreements"><div class="card" style="padding:1.4rem">
+    {% if bookings %}{% for b in bookings %}<div style="border-bottom:1px solid var(--border);padding:1rem 0"><b>Rental Agreement #AR-{{ "%05d"|format(b.id) }}</b><br>{{ b.vehicle.display_name }} · {{ b.start_date }} → {{ b.end_date }} ({{ b.days }} days) · Total Rs. {{ "{:,}".format(b.total) }} + Deposit Rs. {{ "{:,}".format(b.deposit) }} · Status: {{ b.status }}<br><small>Fuel replacement rule, damage security deposit and return inspection apply, as agreed at booking.</small></div>{% endfor %}
+    {% else %}<p>No rental agreements yet — your agreements appear here automatically after each booking.</p>{% endif %}
+  </div></div>
+</section>
+{% endblock %}

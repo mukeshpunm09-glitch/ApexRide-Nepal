@@ -1,0 +1,57 @@
+{% extends "base.html" %}{% block title %}{{ v.display_name }} — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <a href="{{ url_for('main.fleet') }}" style="color:var(--gold2)">← Back to Fleet</a>
+  <h1 class="mt">{{ v.display_name }} <small style="color:var(--muted);font-size:1.2rem">· {{ v.year }}</small></h1>
+  <div class="meta-row"><span class="chip {{ 'lux' if v.tier=='luxury' else 'std' }}">{{ '👑 Luxury' if v.tier=='luxury' else '✓ Standard' }}</span><span class="chip">{{ v.category|title }}</span><span class="chip">{{ v.transmission }}</span><span class="chip">{{ v.fuel }}</span><span class="chip">📍 {{ v.location }}</span><span class="chip">🛡️ Verified Owner</span></div>
+  <div class="detail-layout mt">
+    <div>
+      <div class="gallery-main"><img id="galMain" src="{{ v.photos[0] if v.photos else v.cover }}" alt="{{ v.display_name }} — Front Exterior">
+        <button class="gal-btn gal-prev" id="galPrev" aria-label="Previous photo">‹</button>
+        <button class="gal-btn gal-next" id="galNext" aria-label="Next photo">›</button>
+        <span class="gal-count" id="galCount">1 / {{ v.photos|length }}</span></div>
+      <div class="thumbs">
+        {% set labels = ["Front Exterior","Rear Exterior","Side Left","Side Right","Interior Cockpit & Dashboard","Interior Rear Seats","Boot / Engine"] %}
+        {% for p in v.photos %}<img src="{{ p }}" alt="{{ v.display_name }} — {{ labels[loop.index0] if loop.index0 < 7 else 'Photo' }}" class="{{ 'active' if loop.first }}" loading="lazy">{% endfor %}
+      </div>
+      <p class="mt" style="font-size:.88rem">📸 7-photo gallery — swipe on mobile, tap a thumbnail, or click the main photo for full-screen lightbox. Photos: Front · Rear · Side Left · Side Right · Cockpit &amp; Dashboard · Rear Seats · Boot / Engine.</p>
+      <h3 class="mt">About this vehicle</h3><p>{{ v.description }}</p>
+      <div class="spec-grid">
+        <div class="spec"><span>Model Year</span><b>{{ v.year }}</b></div>
+        <div class="spec"><span>Mileage</span><b>{{ "{:,}".format(v.mileage_km) }} km</b></div>
+        <div class="spec"><span>Engine</span><b>{{ v.cc }} CC</b></div>
+        <div class="spec"><span>Seating</span><b>{{ v.seats }} seats</b></div>
+        <div class="spec"><span>Fuel</span><b>{{ v.fuel }}</b></div>
+        <div class="spec"><span>Transmission</span><b>{{ v.transmission }}</b></div>
+      </div>
+      {% if v.video %}<div class="video-wrap mt"><video controls preload="metadata" src="/{{ v.video }}"></video></div>{% endif %}
+    </div>
+    <div class="card" style="padding:1.5rem;position:sticky;top:92px" id="bookingWidget" data-rate="{{ v.daily_price }}" data-category="{{ v.category }}" data-tier="{{ v.tier }}" data-vehicle="{{ v.id }}">
+      <span class="price">Rs. {{ "{:,}".format(v.daily_price) }}<small>/day</small></span>
+      <span class="chip" style="float:right">Deposit Rs. {{ "{:,}".format(v.deposit) }}</span>
+      <form method="post" action="{{ url_for('main.book', vehicle_id=v.id) }}" class="mt">
+        <div class="field"><label for="startDate">Pickup Date</label><input type="date" id="startDate" name="start_date" required></div>
+        <div class="field"><label for="endDate">Return Date</label><input type="date" id="endDate" name="end_date" required></div>
+        <p id="bdError" style="color:#fb7185;font-weight:600"></p>
+        <div class="price-line"><span>Duration</span><b id="bdDays">—</b></div>
+        <div class="price-line"><span>Daily rate</span><b id="bdRate">Rs. {{ "{:,}".format(v.daily_price) }}</b></div>
+        <div class="price-line"><span>Subtotal</span><b id="bdSub">—</b></div>
+        <div class="price-line"><span>Service fee (5%)</span><b id="bdFee">—</b></div>
+        <div class="price-line"><span>VAT (13%)</span><b id="bdVat">—</b></div>
+        <div class="price-line"><span>Refundable deposit</span><b id="bdDep">Rs. {{ "{:,}".format(v.deposit) }}</b></div>
+        <div class="price-line total"><span>Total (excl. deposit)</span><b id="bdTotal">—</b></div>
+        <div class="price-line total"><span>Payable now</span><b id="bdNow">—</b></div>
+        {% if session_user_name %}<button class="btn btn-primary btn-block mt" type="submit">✅ Confirm Booking</button>
+        {% else %}<a class="btn btn-primary btn-block mt" href="{{ url_for('auth.login') }}">🔑 Log in to Book</a><p class="mt" style="font-size:.88rem">New here? <a href="{{ url_for('auth.register') }}" style="color:var(--gold2)">Create a free account</a> — Nagarikta / National ID + driving licence verification required.</p>{% endif %}
+      </form>
+      <p class="mt" style="font-size:.85rem">🛡️ Security guarantee: deposit is fully refundable after return inspection. Fuel replacement rule applies. 24/7 road assistance: +977-9845857209.</p>
+    </div>
+  </div>
+  {% if related %}<h2 class="mt">You may also like</h2><div class="grid grid-3 mt">
+    {% for r in related %}<article class="card"><div class="card-img"><img src="{{ r.cover }}" alt="{{ r.display_name }}" loading="lazy"></div><div class="card-body"><h3>{{ r.display_name }}</h3><span class="price">Rs. {{ "{:,}".format(r.daily_price) }}<small>/day</small></span><a class="btn btn-ghost btn-block mt" href="{{ url_for('main.vehicle_detail', vehicle_id=r.id) }}">View →</a></div></article>{% endfor %}
+  </div>{% endif %}
+</section>
+<div class="sticky-cta"><div><span style="font-size:.8rem;color:var(--muted)">Total from</span><div class="price" id="stickyPrice">Rs. {{ "{:,}".format(v.daily_price) }}/day</div></div>
+<a class="btn btn-primary" href="#bookingWidget">Book Now</a></div>
+<div class="lightbox" id="lightbox"><button id="lbClose" aria-label="Close">✕</button><img id="lbImg" src="" alt="Vehicle photo — full screen"></div>
+{% endblock %}

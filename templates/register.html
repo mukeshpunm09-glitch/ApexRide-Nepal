@@ -1,0 +1,43 @@
+{% extends "base.html" %}{% block title %}Register &amp; Verification — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <div class="card form-card reveal">
+    <p class="eyebrow">Verification &amp; Registration</p><h1 id="roleTitle">Rent a Vehicle — Customer</h1>
+    <p>Choose your role. KYC verification keeps ApexRide safe for everyone in Nepal.</p>
+    <div class="role-grid mt">
+      <div class="role-opt selected" data-role="customer"><span class="ico">🚗</span><h3>Rent a Vehicle</h3><p>Customer — book cars, bikes &amp; cycles</p></div>
+      <div class="role-opt" data-role="owner"><span class="ico">💰</span><h3>List &amp; Earn</h3><p>Vehicle Owner — earn from your vehicle</p></div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+      <input type="hidden" name="role" id="roleInput" value="customer">
+      <div class="field"><label>Full Name *</label><input name="full_name" required placeholder="e.g. Bikalpa Khanal"></div>
+      <div class="field-row">
+        <div class="field"><label>Phone Number (Nepal) *</label><input id="phoneInput" name="phone" required inputmode="numeric" placeholder="98xxxxxxxx" pattern="^(98|97)[0-9]{8}$" title="10-digit Nepal number starting 98 or 97"><small>10 digits, starting 98 or 97.</small></div>
+        <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="you@example.com"></div>
+      </div>
+      <div class="field"><label>Password *</label><input type="password" name="password" required minlength="6" placeholder="At least 6 characters"></div>
+      <div id="customerFields">
+        <div class="field-row">
+          <div class="field"><label>Nagarikta / Citizenship No. *</label><input name="nagarikta_no" placeholder="e.g. 12-34-56-78901"><small>Customer: Nagarikta <b>OR</b> National ID is required.</small></div>
+          <div class="field"><label>National ID No.</label><input name="national_id_no" placeholder="e.g. NID-100200300"></div>
+        </div>
+        <div class="field"><label>Driving Licence Number *</label><input name="licence_no" placeholder="e.g. DL-03-123456"></div>
+        <div class="field"><label>Driving Licence Photo *</label><input type="file" name="licence_photo" accept="image/*" capture="environment"><small>Clear photo of your licence — front side, all text readable.</small></div>
+      </div>
+      <div id="ownerFields" style="display:none">
+        <div class="field-row">
+          <div class="field"><label>Nagarikta / Citizenship No. *</label><input name="nagarikta_no" placeholder="Required for owners"></div>
+          <div class="field"><label>National ID No. *</label><input name="national_id_no" placeholder="Required for owners"></div>
+        </div>
+        <p style="font-size:.9rem">Owners must provide <b style="color:#fff">BOTH</b> Nagarikta AND National ID.</p>
+        <div class="field"><label>Bluebook / Vehicle Registration Document *</label><input type="file" name="bluebook_photo" accept="image/*" capture="environment"><small>Clear photo of your vehicle's Bluebook.</small></div>
+        <div class="field"><label>360° Walkaround Video *</label><input type="file" name="walkaround_video" accept="video/*" capture="environment"><small>Recent walkaround video of your vehicle — MP4 / MOV / WebM.</small></div>
+      </div>
+      <div class="field"><label>Live / Recent Full Face Photo (Selfie Verification) *</label><input type="file" name="selfie_photo" accept="image/*" capture="user"><small>Face the camera in good light — this is matched to your Nagarikta / ID.</small></div>
+      <button class="btn btn-primary btn-block" type="submit">✅ Create Account &amp; Submit for Verification</button>
+      <p class="center mt" style="font-size:.9rem">Already have an account? <a href="{{ url_for('auth.login') }}" style="color:var(--gold2)">Log in</a></p>
+      <p class="center" style="font-size:.85rem">Demo accounts — owner@apexride.com.np / customer@apexride.com.np · password: apexride123</p>
+    </form>
+  </div>
+</section>
+{% endblock %}

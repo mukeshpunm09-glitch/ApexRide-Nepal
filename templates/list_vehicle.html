@@ -1,0 +1,45 @@
+{% extends "base.html" %}{% block title %}List Your Vehicle — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <div class="card form-card reveal">
+    <p class="eyebrow">Owner Portal · List &amp; Earn</p><h1>List Your Vehicle</h1>
+    <p>Earn from your car, bike or cycle. Fixed pricing is locked by ApexRide policy — pick a category &amp; tier and the daily rate is set automatically.</p>
+    <div class="steps mt">
+      <div class="step active">1 · Basics</div><div class="step">2 · 7 Photos</div><div class="step">3 · Video &amp; Pricing</div><div class="step">4 · Review &amp; Policy</div>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="mt">
+      <div class="wizard-step active">
+        <div class="field-row"><div class="field"><label>Brand *</label><input id="vehBrand" name="brand" required placeholder="e.g. Toyota"></div><div class="field"><label>Model *</label><input id="vehModel" name="model" required placeholder="e.g. Land Cruiser Prado"></div></div>
+        <div class="field-row"><div class="field"><label>Year *</label><input id="vehYear" type="number" name="year" min="2000" max="2026" value="2023" required></div><div class="field"><label>Mileage (km) *</label><input type="number" name="mileage_km" min="0" value="15000" required></div></div>
+        <div class="field-row"><div class="field"><label>Transmission *</label><select id="vehTransmission" name="transmission"><option>Automatic</option><option>Manual</option></select></div><div class="field"><label>Fuel Type *</label><select id="vehFuel" name="fuel"><option>Petrol</option><option>Diesel</option><option>Electric</option><option>Hybrid</option></select></div></div>
+        <div class="field-row"><div class="field"><label>Engine CC</label><input type="number" name="cc" min="0" value="1500"></div><div class="field"><label>Seats</label><input type="number" name="seats" min="1" max="15" value="5"></div></div>
+        <div class="field"><label>Location *</label><select id="vehLocation" name="location"><option>Kathmandu</option><option>Pokhara</option><option>Ghorahi</option><option>Chitwan</option><option>Butwal</option></select></div>
+        <div class="field"><label>Description</label><textarea name="description" rows="3" placeholder="Condition, features, ideal trips…"></textarea></div>
+        <button type="button" class="btn btn-primary btn-block" data-next>Next: Photos →</button>
+      </div>
+      <div class="wizard-step">
+        <p><b style="color:#fff">Exactly 7 photos required</b> — clear, well-lit, no other vehicles in frame.</p>
+        <div class="photo-slots mt">
+          {% for label in labels %}<div class="photo-slot"><label>{{ loop.index }}. {{ label }} {{ '*' if loop.first }}</label><input type="file" name="photo_{{ loop.index }}" accept="image/*" capture="environment" {{ 'required' if loop.first }}></div>{% endfor %}
+        </div>
+        <div style="display:flex;gap:.7rem;margin-top:1.2rem"><button type="button" class="btn btn-ghost" data-prev>← Back</button><button type="button" class="btn btn-primary" style="flex:1" data-next>Next: Video &amp; Pricing →</button></div>
+      </div>
+      <div class="wizard-step">
+        <div class="field"><label>Vehicle Walkaround Video *</label><input type="file" name="walkaround_video" accept="video/*" capture="environment"><small>360° walkaround — MP4 / MOV / WebM, max 100 MB.</small></div>
+        <div class="field-row">
+          <div class="field"><label>Category *</label><select id="vehCategory" name="category" required><option value="">Select…</option><option value="cycle">Cycle</option><option value="bike">Bike / Motorcycle</option><option value="car">Car</option></select></div>
+          <div class="field"><label>Tier *</label><select id="vehTier" name="tier" required><option value="">Select…</option><option value="standard">Standard</option><option value="luxury">Luxury / High CC / Mountain</option></select></div>
+        </div>
+        <div class="field"><label>Daily Rental Price (Rs.) — LOCKED</label><input id="dailyPrice" name="daily_price" type="number" readonly value=""><small id="priceNote">Select a category and tier above — the price locks automatically.</small></div>
+        <div class="card" style="padding:1rem;font-size:.9rem"><b style="color:#fff">Fixed Pricing (Rs./day)</b><br>Standard Cycle 500 · Luxury Cycle 2,000 · Standard Bike 2,000 · Luxury Bike 7,000 · Standard Car 7,000 · Luxury Car 15,000<br><small>Server-side validation rejects any mismatched price.</small></div>
+        <div style="display:flex;gap:.7rem;margin-top:1.2rem"><button type="button" class="btn btn-ghost" data-prev>← Back</button><button type="button" class="btn btn-primary" style="flex:1" data-next>Next: Review →</button></div>
+      </div>
+      <div class="wizard-step">
+        <h3>Review Your Listing</h3><div id="reviewSummary" class="card mt" style="padding:1.1rem"></div>
+        <div class="field mt"><label style="display:flex;gap:.6rem;align-items:flex-start"><input type="checkbox" name="return_policy" value="yes" required style="width:22px;height:22px;min-height:22px;margin-top:.2rem"> <span><b style="color:#fff">Return Policy Agreement *</b> — I agree to the fuel replacement rule (return with the same fuel level), the damage security deposit (deducted only for verified damage), and a return inspection before the deposit is refunded.</span></label></div>
+        <div style="display:flex;gap:.7rem;margin-top:1.2rem"><button type="button" class="btn btn-ghost" data-prev>← Back</button><button type="submit" class="btn btn-gold" style="flex:1">✅ Publish Listing</button></div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

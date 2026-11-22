@@ -1,0 +1,32 @@
+{% extends "base.html" %}{% block title %}About &amp; Contact — ApexRide Nepal{% endblock %}
+{% block content %}
+<section class="section container">
+  <p class="eyebrow">About ApexRide Nepal</p><h1>Our Story</h1>
+  <div class="two-col mt">
+    <div><p class="lead">ApexRide Nepal began with a simple frustration: renting a good vehicle in Nepal was slow, uncertain, and priced in whispers.</p>
+    <p class="mt">In 2025, <b style="color:#fff">Mr. Bikalpa Khanal</b> needed a reliable SUV for a family trip from Ghorahi to Pokhara — and spent two days calling strangers, haggling over prices, and worrying whether the car would even arrive. His friend <b style="color:#fff">Madhu Pun</b> had the same story with a bike in Kathmandu. Together, they decided Nepal deserved better.</p>
+    <p class="mt">They built ApexRide Nepal as a platform where every owner is verified with Nagarikta / National ID and Bluebook documents, every renter is verified with a driving licence and selfie, and every price is fixed and visible in Nepalese Rupees — Rs. 500 for a standard cycle up to Rs. 15,000 for a luxury car. No haggling. No surprises.</p>
+    <p class="mt">Today ApexRide serves Kathmandu, Pokhara, Ghorahi and beyond — with 24/7 road assistance, transparent rental agreements, and a team that answers the phone.</p></div>
+    <div class="card" style="padding:1.8rem">
+      <p class="eyebrow">Founders</p>
+      <div class="founder"><div class="avatar">BK</div><div><h3>Bikalpa Khanal</h3><p>Co-Founder &amp; CEO — Ghorahi / Kathmandu</p></div></div>
+      <div class="founder mt"><div class="avatar" style="background:linear-gradient(135deg,#d97706,#e11d48)">MP</div><div><h3>Madhu Pun</h3><p>Co-Founder &amp; Head of Operations — Nepal</p></div></div>
+      <p class="mt"><b style="color:#fff">Founders: Mr. Bikalpa Khanal &amp; Madhu Pun</b></p>
+      <p>📍 Office: Durbarmarg, Kathmandu, Nepal<br>📞 +977-9845857209 · ✉️ Khanal2061@gmail.com<br>🛟 Emergency Road Assistance (24/7): +977-9845857209</p>
+    </div>
+  </div>
+  <h2 class="mt" id="faq">Frequently Asked Questions</h2>
+  <div class="mt">
+    <div class="faq-item"><button class="faq-q" type="button">What documents do I need to rent? <span>+</span></button><div class="faq-a"><p>Customers need a Nagarikta (Citizenship) Number OR National ID Number, a valid Driving Licence Number with a clear licence photo, and a live/recent full-face selfie for verification.</p></div></div>
+    <div class="faq-item"><button class="faq-q" type="button">What documents do owners need? <span>+</span></button><div class="faq-a"><p>Owners need BOTH Nagarikta AND National ID, a selfie, a Bluebook / vehicle registration document, and a recent 360° walkaround video of the vehicle.</p></div></div>
+    <div class="faq-item"><button class="faq-q" type="button">How much does rental cost? <span>+</span></button><div class="faq-a"><p>Fixed prices (Rs./day): Standard Cycle 500 · Luxury Cycle 2,000 · Standard Bike 2,000 · Luxury Bike 7,000 · Standard Car 7,000 · Luxury Car 15,000. Plus 5% service fee and 13% VAT, shown before you pay.</p></div></div>
+    <div class="faq-item"><button class="faq-q" type="button">What is the return policy? <span>+</span></button><div class="faq-a"><p>Return with the same fuel level (fuel replacement rule), pass a return inspection, and your refundable security deposit is returned in full. Verified damage is deducted from the deposit only.</p></div></div>
+    <div class="faq-item"><button class="faq-q" type="button">What if my vehicle breaks down? <span>+</span></button><div class="faq-a"><p>Call our 24/7 Emergency Road Assistance on +977-9845857209 from anywhere in Nepal.</p></div></div>
+    <div class="faq-item"><button class="faq-q" type="button">Terms &amp; Privacy — how is my KYC data used? <span>+</span></button><div class="faq-a"><p>Your Nagarikta, National ID, licence and Bluebook documents are used only for identity and ownership verification, stored securely, and never shared with third parties except as required by Nepali law. By registering you agree to our Terms, Return Policy and Privacy Policy.</p></div></div>
+  </div>
+  <div class="card mt" style="padding:1.8rem;text-align:center">
+    <h3>Legal / Company</h3><p>ApexRide Nepal Pvt. Ltd. · Registered in Kathmandu, Nepal · Founders: Mr. Bikalpa Khanal &amp; Madhu Pun · All prices in Nepalese Rupee (NPR / Rs.)</p>
+    <a class="btn btn-primary mt" href="{{ url_for('auth.register') }}">Join ApexRide Nepal →</a>
+  </div>
+</section>
+{% endblock %}
